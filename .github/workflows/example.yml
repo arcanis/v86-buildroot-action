@@ -2,9 +2,9 @@ name: Example V86 Buildroot Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -18,31 +18,10 @@ jobs:
       - name: Build V86 Image
         uses: ./
         with:
-          artifact-name: basic-v86-image
+          output: basic-v86-image.bin
 
-  build-custom:
-    name: Build Custom Image
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Prepare custom files
-        run: |
-          mkdir -p custom-files/etc
-          mkdir -p custom-files/usr/local/bin
-          echo "Welcome to Custom V86 Linux!" > custom-files/etc/motd
-          echo '#!/bin/sh' > custom-files/usr/local/bin/hello
-          echo 'echo "Hello from custom script!"' >> custom-files/usr/local/bin/hello
-          chmod +x custom-files/usr/local/bin/hello
-
-      - name: Build Custom V86 Image
-        uses: ./
+      - name: Save as artifact
+        uses: actions/upload-artifact@v4
         with:
-          buildroot-config: |
-            BR2_PACKAGE_PYTHON3=y
-            BR2_PACKAGE_NANO=y
-            BR2_PACKAGE_HTOP=y
-            BR2_TARGET_ROOTFS_EXT2_SIZE="32M"
-          copy-path: ./custom-files
-          artifact-name: custom-v86-image
+          name: basic-v86-image
+          path: basic-v86-image.bin

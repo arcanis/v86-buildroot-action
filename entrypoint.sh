@@ -8,15 +8,11 @@ set -euo pipefail
 echo "🚀 Starting V86 Buildroot build process"
 
 # Default values
-BUILDROOT_VERSION="${BUILDROOT_VERSION:-2024.05.2}"
-WORKING_DIR="${WORKING_DIR:-./build}"
-ARTIFACT_NAME="${ARTIFACT_NAME:-v86-buildroot-image}"
+BUILDROOT_VERSION="${1}"
+BUILDROOT_CONFIG="${2}"
+OVERLAY="${3}"
+OUTPUT="${4}"
 
-# Create working directory
-mkdir -p "$WORKING_DIR"
-cd "$WORKING_DIR"
-
-echo "📁 Working directory: $(pwd)"
 echo "🔧 Buildroot version: $BUILDROOT_VERSION"
 
 # Create config directory
@@ -113,7 +109,7 @@ echo "✅ Build completed at: $(date)"
 
 # Copy bzImage to a standard location
 BZIMAGE_PATH="$PWD/output/images/bzImage"
-OUTPUT_IMAGE="../${ARTIFACT_NAME}.bin"
+OUTPUT_IMAGE="/github/workspace/${OUTPUT}.bin"
 
 if [[ -f "$BZIMAGE_PATH" ]]; then
     cp "$BZIMAGE_PATH" "$OUTPUT_IMAGE"
@@ -126,13 +122,3 @@ else
     echo "❌ Error: bzImage not found at $BZIMAGE_PATH"
     exit 1
 fi
-
-# Set outputs for GitHub Actions
-cd ..
-OUTPUT_FULL_PATH="$(pwd)/${ARTIFACT_NAME}.bin"
-echo "artifact-name=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
-echo "bzimage-path=$OUTPUT_FULL_PATH" >> "$GITHUB_OUTPUT"
-
-echo "🎉 V86 Buildroot build completed successfully!"
-echo "📦 Artifact: $ARTIFACT_NAME"
-echo "📍 Path: $OUTPUT_FULL_PATH"
