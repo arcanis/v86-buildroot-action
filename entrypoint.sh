@@ -24,7 +24,7 @@ echo "🚀 Starting V86 Buildroot build process"
 # Default values
 BUILDROOT_VERSION="${1}"
 BUILDROOT_CONFIG="${2}"
-OVERLAY="${3}"
+OVERLAY_SOURCE="${3}"
 OUTPUT="${4}"
 
 echo "🔧 Buildroot version: $BUILDROOT_VERSION"
@@ -84,26 +84,18 @@ if [[ -n "$BUILDROOT_CONFIG" ]]; then
 fi
 
 # Handle optional file copying
-if [[ -n "$COPY_PATH" && -e "$COPY_PATH" ]]; then
-    echo "📂 Copying user files from $COPY_PATH..."
-    
+if [[ -n "$OVERLAY_SOURCE" && -d "$OVERLAY_SOURCE" ]]; then
+    echo "📂 Copying user files from $OVERLAY_SOURCE..."
+
     # Create a custom rootfs overlay directory
-    OVERLAY_DIR="overlay"
-    mkdir -p "$OVERLAY_DIR"
-    
-    if [[ -d "$COPY_PATH" ]]; then
-        # Copy directory contents
-        cp -r "$COPY_PATH"/* "$OVERLAY_DIR/" 2>/dev/null || true
-    elif [[ -f "$COPY_PATH" ]]; then
-        # Copy single file to root
-        cp "$COPY_PATH" "$OVERLAY_DIR/"
-    fi
-    
-    # Add overlay to buildroot config if we have files to copy
-    if [[ -n "$(ls -A "$OVERLAY_DIR" 2>/dev/null)" ]]; then
-        echo "BR2_ROOTFS_OVERLAY=\"$PWD/$OVERLAY_DIR\"" >> .config
-        echo "✅ Added rootfs overlay: $OVERLAY_DIR"
-    fi
+    OVERLAY_DESTINATION="overlay"
+    mkdir -p "$OVERLAY_DESTINATION"
+
+    # Copy directory contents
+    cp -r "$OVERLAY_SOURCE"/* "$OVERLAY_DESTINATION/" 2>/dev/null || true
+
+    echo "BR2_ROOTFS_OVERLAY=\"$PWD/$OVERLAY_DESTINATION\"" >> .config
+    echo "✅ Added rootfs overlay: $OVERLAY_DESTINATION"
 fi
 
 # Apply configuration
@@ -123,12 +115,12 @@ echo "✅ Build completed at: $(date)"
 
 # Copy bzImage to a standard location
 BZIMAGE_PATH="$PWD/output/images/bzImage"
-OUTPUT_IMAGE="/github/workspace/${OUTPUT}.bin"
+OUTPUT_IMAGE="/github/workspace/${OUTPUT}"
 
 if [[ -f "$BZIMAGE_PATH" ]]; then
     cp "$BZIMAGE_PATH" "$OUTPUT_IMAGE"
     echo "✅ bzImage copied to: $OUTPUT_IMAGE"
-    
+
     # Get file size for reporting
     FILE_SIZE=$(ls -lh "$OUTPUT_IMAGE" | awk '{print $5}')
     echo "📊 Image size: $FILE_SIZE"
