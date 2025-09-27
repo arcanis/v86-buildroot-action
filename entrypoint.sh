@@ -3,22 +3,6 @@ set -euo pipefail
 
 echo "📦 Installing dependencies..."
 
-apt-get update
-apt-get install -y \
-    bash \
-    bc \
-    build-essential \
-    cpio \
-    curl \
-    file \
-    git \
-    libncurses-dev \
-    python3 \
-    python3-pip \
-    rsync \
-    unzip \
-    wget
-
 # V86 Buildroot Action Entrypoint
 # This script builds a v86-compatible buildroot image following the community configuration
 # from https://github.com/copy/v86/issues/725#issuecomment-2631238720
