@@ -19,5 +19,7 @@ USER ubuntu
 
 COPY entrypoint.sh /entrypoint.sh
 
+WORKDIR /home/ubuntu
+
 ENTRYPOINT ["/entrypoint.sh"]
 
