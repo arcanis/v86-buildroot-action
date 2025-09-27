@@ -15,11 +15,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     wget
 
-USER ubuntu
-
 COPY entrypoint.sh /entrypoint.sh
-
-WORKDIR /home/ubuntu
 
 ENTRYPOINT ["/entrypoint.sh"]
 

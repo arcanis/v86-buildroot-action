@@ -15,6 +15,8 @@ BUILDROOT_CONFIG="${2}"
 OVERLAY_SOURCE="${3}"
 OUTPUT="${4}"
 
+export FORCE_UNSAFE_CONFIGURE=1
+
 echo "🔧 Buildroot version: $BUILDROOT_VERSION"
 
 # Create config directory
