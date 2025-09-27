@@ -6,13 +6,17 @@ echo "📦 Installing dependencies..."
 apt-get update
 apt-get install -y \
     bash \
+    bc \
     build-essential \
+    cpio \
     curl \
     file \
     git \
     libncurses-dev \
     python3 \
     python3-pip \
+    rsync \
+    unzip \
     wget
 
 # V86 Buildroot Action Entrypoint
