@@ -3,8 +3,8 @@ set -euo pipefail
 
 echo "📦 Installing dependencies..."
 
-sudo apt-get update
-sudo apt-get install -y \
+apt-get update
+apt-get install -y \
     bash \
     build-essential \
     curl \
