@@ -94,6 +94,54 @@ To add additional packages to your buildroot image, use the `buildroot-config` i
       BR2_PACKAGE_MAKE=y
 ```
 
+### Common Package Categories
+
+**Text Editors:**
+```
+BR2_PACKAGE_NANO=y          # Nano text editor
+BR2_PACKAGE_VIM=y           # Vim editor (larger)
+```
+
+**System Utilities:**
+```
+BR2_PACKAGE_HTOP=y          # Process monitor
+BR2_PACKAGE_TREE=y          # Directory tree display
+BR2_PACKAGE_FILE=y          # File type detection
+BR2_PACKAGE_WHICH=y         # Which command
+```
+
+**Network Tools:**
+```
+BR2_PACKAGE_CURL=y          # HTTP client
+BR2_PACKAGE_WGET=y          # Web downloader  
+BR2_PACKAGE_OPENSSH=y       # SSH client/server
+BR2_PACKAGE_DROPBEAR=y      # Lightweight SSH (alternative)
+```
+
+**Programming Languages:**
+```
+BR2_PACKAGE_PYTHON3=y       # Python 3
+BR2_PACKAGE_NODEJS=y        # Node.js
+BR2_PACKAGE_GO=y            # Go language
+BR2_PACKAGE_LUA=y           # Lua language
+```
+
+**Development Tools:**
+```
+BR2_PACKAGE_GCC=y           # GCC compiler
+BR2_PACKAGE_MAKE=y          # Make build tool
+BR2_PACKAGE_GIT=y           # Git version control
+BR2_PACKAGE_STRACE=y        # System call tracer
+```
+
+**Libraries:**
+```
+BR2_PACKAGE_ZLIB=y          # Compression library
+BR2_PACKAGE_OPENSSL=y       # SSL/TLS library
+BR2_PACKAGE_SQLITE=y        # SQLite database
+BR2_PACKAGE_NCURSES=y       # Terminal library
+```
+
 ### Adding Custom Files
 
 You can copy files or directories into the filesystem using the `copy-path` input:
@@ -155,21 +203,60 @@ The resulting image is typically 5-15MB depending on included packages.
 
 ### Build Fails with Missing Dependencies
 
-The action installs common build dependencies automatically. If you encounter missing dependencies, they're likely related to specific packages you've added.
+The action installs common build dependencies automatically. If you encounter missing dependencies, they're likely related to specific packages you've added. Common additional dependencies:
+
+```yaml
+- name: Install additional dependencies
+  run: |
+    sudo apt-get update
+    sudo apt-get install -y python3-dev libssl-dev
+
+- uses: arcanis/v86-buildroot-action@v1
+  with:
+    buildroot-config: |
+      BR2_PACKAGE_OPENSSL=y
+      BR2_PACKAGE_PYTHON3=y
+```
 
 ### Large Images
 
-If your image becomes too large:
+If your image becomes too large (>50MB), consider:
 - Remove unnecessary packages from `buildroot-config`
-- Use `BR2_TARGET_ROOTFS_*` options to configure filesystem compression
+- Use `BR2_TARGET_ROOTFS_*` options to configure filesystem compression:
+  ```
+  BR2_TARGET_ROOTFS_EXT2_SIZE="16M"
+  BR2_TARGET_ROOTFS_EXT2_COMPRESS=y
+  ```
 - Consider using `BR2_TOOLCHAIN_EXTERNAL` for smaller toolchain footprint
 
 ### Network Issues in v86
 
 Ensure your v86 setup:
 - Uses the `inbrowser` network backend
-- Has the NE2000 network device configured
+- Has the NE2000 network device configured  
 - Uses the correct bzImage (not just any Linux kernel)
+- For networking between VMs, one must run `v86-inbrowser-router` first
+
+### Build Timeouts
+
+GitHub Actions has a 6-hour timeout limit. If builds consistently timeout:
+- Remove large packages (compilers, development tools)
+- Use external toolchain: `BR2_TOOLCHAIN_EXTERNAL=y`
+- Consider using a cached intermediate build
+
+### Configuration Validation
+
+To validate your buildroot configuration before building:
+```bash
+# Download just the config files
+curl -L -o config-buildroot.txt "https://gist.githubusercontent.com/chschnell/22345dcc8d3bce1c577f853edd2ff598/raw/config-buildroot_20250203.txt"
+
+# Append your custom config
+echo "BR2_PACKAGE_YOUR_PACKAGE=y" >> config-buildroot.txt
+
+# Check for conflicts (requires local buildroot)
+make oldconfig
+```
 
 ## Development
 
