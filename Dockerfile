@@ -20,4 +20,4 @@ RUN apt-get update && apt-get install -y \
 COPY rootfs-overlay .
 COPY entrypoint.sh .
 
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
