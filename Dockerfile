@@ -1,5 +1,7 @@
 FROM ubuntu:24.04
 
+WORKDIR /root
+
 RUN apt-get update && apt-get install -y \
     bash \
     bc \
@@ -15,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     wget
 
-COPY entrypoint.sh /entrypoint.sh
+COPY rootfs-overlay .
+COPY entrypoint.sh .
 
-ENTRYPOINT ["/entrypoint.sh"]
-
+ENTRYPOINT ["entrypoint.sh"]

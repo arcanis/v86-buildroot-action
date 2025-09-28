@@ -77,15 +77,8 @@ fi
 if [[ -n "$OVERLAY_SOURCE" && -d "$OVERLAY_SOURCE" ]]; then
     echo "📂 Copying user files from $OVERLAY_SOURCE..."
 
-    # Create a custom rootfs overlay directory
-    OVERLAY_DESTINATION="overlay"
-    mkdir -p "$OVERLAY_DESTINATION"
-
-    # Copy directory contents
-    cp -r "$OVERLAY_SOURCE"/* "$OVERLAY_DESTINATION/" 2>/dev/null || true
-
-    echo "BR2_ROOTFS_OVERLAY=\"$PWD/$OVERLAY_DESTINATION\"" >> .config
-    echo "✅ Added rootfs overlay: $OVERLAY_DESTINATION"
+    # Copy directory contents; note the trailing dot to include all files and directories
+    cp -r /github/workspace/"$OVERLAY_SOURCE"/. rootfs-overlay/
 fi
 
 # Apply configuration
@@ -105,14 +98,13 @@ echo "✅ Build completed at: $(date)"
 
 # Copy bzImage to a standard location
 BZIMAGE_PATH="$PWD/output/images/bzImage"
-OUTPUT_IMAGE="/github/workspace/${OUTPUT}"
 
 if [[ -f "$BZIMAGE_PATH" ]]; then
-    cp "$BZIMAGE_PATH" "$OUTPUT_IMAGE"
-    echo "✅ bzImage copied to: $OUTPUT_IMAGE"
+    cp "$BZIMAGE_PATH" /github/workspace/"$OUTPUT"
+    echo "✅ bzImage copied to: $OUTPUT"
 
     # Get file size for reporting
-    FILE_SIZE=$(ls -lh "$OUTPUT_IMAGE" | awk '{print $5}')
+    FILE_SIZE=$(ls -lh "$OUTPUT" | awk '{print $5}')
     echo "📊 Image size: $FILE_SIZE"
 else
     echo "❌ Error: bzImage not found at $BZIMAGE_PATH"

@@ -15,9 +15,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set the generation time
+        run: |
+          mkdir -p rootfs-overlay/etc
+          echo "$(date)" > rootfs-overlay/etc/header
+
       - name: Build V86 Image
         uses: ./
         with:
+          overlay: rootfs-overlay
           output: basic-v86-image.bin
 
       - name: Save as artifact
