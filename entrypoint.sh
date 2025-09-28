@@ -104,7 +104,7 @@ if [[ -f "$BZIMAGE_PATH" ]]; then
     echo "✅ bzImage copied to: $OUTPUT"
 
     # Get file size for reporting
-    FILE_SIZE=$(ls -lh "$OUTPUT" | awk '{print $5}')
+    FILE_SIZE=$(ls -lh /github/workspace/"$OUTPUT" | awk '{print $5}')
     echo "📊 Image size: $FILE_SIZE"
 else
     echo "❌ Error: bzImage not found at $BZIMAGE_PATH"
