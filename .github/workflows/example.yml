@@ -1,0 +1,33 @@
+name: Example V86 Buildroot Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-basic:
+    name: Build Basic Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set the generation time
+        run: |
+          mkdir -p rootfs-overlay/etc
+          echo "$(date)" > rootfs-overlay/etc/header
+
+      - name: Build V86 Image
+        uses: ./
+        with:
+          overlay: rootfs-overlay
+          output: basic-v86-image.bin
+
+      - name: Save as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: basic-v86-image
+          path: basic-v86-image.bin

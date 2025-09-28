@@ -1,0 +1,30 @@
+name: 'V86 Buildroot Image Builder'
+description: 'Build a v86-compatible buildroot image following the community configuration'
+author: 'arcanis'
+
+inputs:
+  buildroot:
+    description: 'Buildroot version to use'
+    required: false
+    default: '2024.05.2'
+  config:
+    description: 'Additional buildroot configuration lines to append to the base config'
+    required: false
+    default: ''
+  overlay:
+    description: 'Path to copy into the resulting filesystem (will be copied to root of filesystem)'
+    required: false
+    default: ''
+  output:
+    description: 'Path to output the built image'
+    required: false
+    default: ''
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - ${{inputs.buildroot}}
+    - ${{inputs.config}}
+    - ${{inputs.overlay}}
+    - ${{inputs.output}}

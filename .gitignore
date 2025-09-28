@@ -1,0 +1,36 @@
+# Build artifacts
+build/
+*.bin
+*.img
+*.gz
+*.tar
+*.zip
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node modules (if any JS tools are added later)
+node_modules/
+
+# Python cache (if any Python tools are added later)
+__pycache__/
+*.py[cod]
+*$py.class
