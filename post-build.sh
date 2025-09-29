@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 BUILDROOT_TREE=$(pwd)
 TARGET_FILESYSTEM="$1"
