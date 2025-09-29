@@ -54,7 +54,7 @@ if [[ -n "$BUILDROOT_CONFIG" ]]; then
 fi
 
 # Handle optional file copying
-if [[ -n "$OVERLAY_SOURCE" && -d "$OVERLAY_SOURCE" ]]; then
+if [[ -n "$OVERLAY_SOURCE" && -d /github/workspace/"$OVERLAY_SOURCE" ]]; then
     echo "📂 Copying user files from $OVERLAY_SOURCE..."
 
     # Copy directory contents; note the trailing dot to include all files and directories
