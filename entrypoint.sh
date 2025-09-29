@@ -28,15 +28,20 @@ tar xf "$BUILDROOT_TAR"
 cd "buildroot-${BUILDROOT_VERSION}"
 
 echo "🔧 Installing base configuration files..."
+
 cp ../config-buildroot.txt .config
 cp ../config-linux.txt linux-config
 cp ../post-build.sh post-build.sh
 cp -r ../rootfs-overlay .
 
+chmod +x post-build.sh
+
 # Apply optional build script
 if [[ -n "$SCRIPT" ]]; then
     echo "🔧 Applying build script..."
     echo "$SCRIPT" > post-build-user.sh
+
+    chmod +x post-build-user.sh
 fi
 
 # Apply user-provided buildroot configuration
