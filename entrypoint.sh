@@ -1,11 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "📦 Installing dependencies..."
-
-# V86 Buildroot Action Entrypoint
-# This script builds a v86-compatible buildroot image following the community configuration
-# from https://github.com/copy/v86/issues/725#issuecomment-2631238720
+cd /root
 
 echo "🚀 Starting V86 Buildroot build process"
 
@@ -34,18 +30,13 @@ cd "buildroot-${BUILDROOT_VERSION}"
 echo "🔧 Installing base configuration files..."
 cp ../config-buildroot.txt .config
 cp ../config-linux.txt linux-config
+cp ../post-build.sh post-build.sh
 cp -r ../rootfs-overlay .
 
 # Apply optional build script
 if [[ -n "$SCRIPT" ]]; then
     echo "🔧 Applying build script..."
-
-    POST_BUILD_SCRIPT="board/arcanis/v86-buildroot-action/post-build"
-    mkdir -p $(dirname "$POST_BUILD_SCRIPT")
-    echo "$SCRIPT" > "$POST_BUILD_SCRIPT"
-    chmod +x "$POST_BUILD_SCRIPT"
-
-    echo "BR2_ROOTFS_POST_BUILD_SCRIPT=\"$POST_BUILD_SCRIPT\"" >> .config
+    echo "$SCRIPT" > post-build-user.sh
 fi
 
 # Apply user-provided buildroot configuration

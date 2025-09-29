@@ -17,7 +17,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     wget
 
-COPY rootfs-overlay .
+COPY config-buildroot.txt .
+COPY config-linux.txt .
 COPY entrypoint.sh .
+COPY post-build.sh .
+COPY rootfs-overlay .
 
 ENTRYPOINT ["./entrypoint.sh"]
