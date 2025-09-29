@@ -34,6 +34,7 @@ cd "buildroot-${BUILDROOT_VERSION}"
 echo "🔧 Installing base configuration files..."
 cp ../config-buildroot.txt .config
 cp ../config-linux.txt linux-config
+cp -r ../rootfs-overlay .
 
 # Apply optional build script
 if [[ -n "$SCRIPT" ]]; then
