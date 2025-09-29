@@ -59,6 +59,8 @@ if [[ -n "$OVERLAY_SOURCE" && -d "$OVERLAY_SOURCE" ]]; then
 
     # Copy directory contents; note the trailing dot to include all files and directories
     cp -r /github/workspace/"$OVERLAY_SOURCE"/. rootfs-overlay/
+
+    ls -lR rootfs-overlay
 fi
 
 # Apply configuration
