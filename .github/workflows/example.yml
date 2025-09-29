@@ -90,20 +90,20 @@ jobs:
             REVERSE="\\[$(tput rev)\\]"
 
             ps1() {
-                # Check the exit code of the previous command and display different
-                # colors in the prompt accordingly.
-                if [ "$?" -eq 0 ]; then
-                    local BG_EXIT="$BG_GREEN"
-                    local FG_EXIT="$FG_GREEN"
-                else
-                    local BG_EXIT="$BG_RED"
-                    local FG_EXIT="$FG_RED"
-                fi
+              # Check the exit code of the previous command and display different
+              # colors in the prompt accordingly.
+              if [ "$?" -eq 0 ]; then
+                local BG_EXIT="$BG_GREEN"
+                local FG_EXIT="$FG_GREEN"
+              else
+                local BG_EXIT="$BG_RED"
+                local FG_EXIT="$FG_RED"
+              fi
 
-                PS1="\n"
-                PS1+="${FG_EXIT}${BG_EXIT} ${RESET}${FG_EXIT}${BG_COLOR5}"
-                PS1+="${FG_COLOR1}${BG_COLOR5} \\w "
-                PS1+="${RESET}${FG_COLOR5}${RESET} "
+              PS1="\n"
+              PS1+="${FG_EXIT}${BG_EXIT} ${RESET}${FG_EXIT}${BG_COLOR5}"
+              PS1+="${FG_COLOR1}${BG_COLOR5} \\w "
+              PS1+="${RESET}${FG_COLOR5}${RESET} "
             }
 
             PROMPT_COMMAND=ps1
