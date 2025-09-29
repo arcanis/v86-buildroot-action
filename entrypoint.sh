@@ -10,7 +10,8 @@ BUILDROOT_VERSION="${1}"
 BUILDROOT_CONFIG="${2}"
 OVERLAY_SOURCE="${3}"
 OUTPUT="${4}"
-SCRIPT="${5}"
+PROFILE="${5}"
+SCRIPT="${6}"
 
 export FORCE_UNSAFE_CONFIGURE=1
 
@@ -36,23 +37,6 @@ cp -r ../rootfs-overlay .
 
 chmod +x post-build.sh
 
-# Apply optional build script
-if [[ -n "$SCRIPT" ]]; then
-    echo "🔧 Applying build script..."
-    echo "$SCRIPT" > post-build-user.sh
-
-    chmod +x post-build-user.sh
-fi
-
-# Apply user-provided buildroot configuration
-if [[ -n "$BUILDROOT_CONFIG" ]]; then
-    echo "🔧 Applying user-provided buildroot configuration..."
-    echo "$BUILDROOT_CONFIG" >> .config
-
-    echo "Applied configuration:"
-    echo "$BUILDROOT_CONFIG"
-fi
-
 # Handle optional file copying
 if [[ -n "$OVERLAY_SOURCE" && -d /github/workspace/"$OVERLAY_SOURCE" ]]; then
     echo "📂 Copying user files from $OVERLAY_SOURCE..."
@@ -61,6 +45,25 @@ if [[ -n "$OVERLAY_SOURCE" && -d /github/workspace/"$OVERLAY_SOURCE" ]]; then
     cp -r /github/workspace/"$OVERLAY_SOURCE"/. rootfs-overlay/
 
     ls -lR rootfs-overlay
+fi
+
+# Apply optional profile script
+if [[ -n "$PROFILE" ]]; then
+    echo "🔧 Applying profile script..."
+    echo "$PROFILE" >> rootfs-overlay/etc/profile
+fi
+
+# Apply optional build script
+if [[ -n "$SCRIPT" ]]; then
+    echo "🔧 Applying build script..."
+    echo "$SCRIPT" > post-build-user.sh
+    chmod +x post-build-user.sh
+fi
+
+# Apply user-provided buildroot configuration
+if [[ -n "$BUILDROOT_CONFIG" ]]; then
+    echo "🔧 Applying user-provided buildroot configuration..."
+    echo "$BUILDROOT_CONFIG" >> .config
 fi
 
 # Apply configuration
