@@ -20,9 +20,6 @@ export FORCE_UNSAFE_CONFIGURE=1
 
 echo "🔧 Buildroot version: $BUILDROOT_VERSION"
 
-# Create config directory
-mkdir -p config-v86
-
 # Download and extract buildroot
 echo "⬇️ Downloading Buildroot $BUILDROOT_VERSION..."
 BUILDROOT_TAR="buildroot-${BUILDROOT_VERSION}.tar.gz"
@@ -35,8 +32,8 @@ tar xf "$BUILDROOT_TAR"
 cd "buildroot-${BUILDROOT_VERSION}"
 
 echo "🔧 Installing base configuration files..."
-cp ../config-v86/config-buildroot.txt .config
-cp ../config-v86/config-linux.txt linux-config
+cp ../config-buildroot.txt .config
+cp ../config-linux.txt linux-config
 
 # Apply optional build script
 if [[ -n "$SCRIPT" ]]; then
