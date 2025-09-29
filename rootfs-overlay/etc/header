@@ -1,0 +1,3 @@
+Enable networking using 'udhcpc'
+Files send via emulator appear in /mnt/
+

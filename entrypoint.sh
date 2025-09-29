@@ -14,6 +14,7 @@ BUILDROOT_VERSION="${1}"
 BUILDROOT_CONFIG="${2}"
 OVERLAY_SOURCE="${3}"
 OUTPUT="${4}"
+SCRIPT="${5}"
 
 export FORCE_UNSAFE_CONFIGURE=1
 
@@ -21,30 +22,6 @@ echo "🔧 Buildroot version: $BUILDROOT_VERSION"
 
 # Create config directory
 mkdir -p config-v86
-
-echo "⬇️ Downloading configuration files from GitHub Gists..."
-
-# Download the latest v86 config files from GitHub Gists
-# Using the most recent configs from chschnell's gists (referenced in the issue)
-if ! curl -L --fail --output config-v86/config-buildroot.txt \
-    "https://gist.githubusercontent.com/chschnell/22345dcc8d3bce1c577f853edd2ff598/raw/a15e3e089a320e5dac1f7a81c1a95ef34dc67607/config-buildroot_20250203.txt"; then
-    echo "❌ Failed to download buildroot config"
-    exit 1
-fi
-
-if ! curl -L --fail --output config-v86/config-linux.txt \
-    "https://gist.githubusercontent.com/chschnell/7c0af26fe9156bb03436f55d1a0b2866/raw/cb44c8c34ac8e32499e7dab3f77f28fc9b4124c3/config-linux_20250203.txt"; then
-    echo "❌ Failed to download linux config"
-    exit 1
-fi
-
-if ! curl -L --fail --output config-v86/rootfs.patch \
-    "https://gist.githubusercontent.com/chschnell/9ba411733237bb9daf09575bb066e6f6/raw/73df51d2e1eed24eea58f267b59e5376d22e1da2/rootfs_20250203.patch"; then
-    echo "❌ Failed to download rootfs patch"
-    exit 1
-fi
-
-echo "✅ Configuration files downloaded"
 
 # Download and extract buildroot
 echo "⬇️ Downloading Buildroot $BUILDROOT_VERSION..."
@@ -61,14 +38,23 @@ echo "🔧 Installing base configuration files..."
 cp ../config-v86/config-buildroot.txt .config
 cp ../config-v86/config-linux.txt linux-config
 
-# Apply the rootfs patch
-echo "🔧 Applying rootfs patch..."
-patch -p1 < ../config-v86/rootfs.patch
+# Apply optional build script
+if [[ -n "$SCRIPT" ]]; then
+    echo "🔧 Applying build script..."
+
+    POST_BUILD_SCRIPT="board/arcanis/v86-buildroot-action/post-build"
+    mkdir -p $(dirname "$POST_BUILD_SCRIPT")
+    echo "$SCRIPT" > "$POST_BUILD_SCRIPT"
+    chmod +x "$POST_BUILD_SCRIPT"
+
+    echo "BR2_ROOTFS_POST_BUILD_SCRIPT=\"$POST_BUILD_SCRIPT\"" >> .config
+fi
 
 # Apply user-provided buildroot configuration
 if [[ -n "$BUILDROOT_CONFIG" ]]; then
     echo "🔧 Applying user-provided buildroot configuration..."
     echo "$BUILDROOT_CONFIG" >> .config
+
     echo "Applied configuration:"
     echo "$BUILDROOT_CONFIG"
 fi
