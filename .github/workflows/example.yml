@@ -23,6 +23,10 @@ jobs:
           config: |
             BR2_PACKAGE_BASH=y
             BR2_SYSTEM_BIN_SH_BASH=y
+
+            # For tput
+            BR2_PACKAGE_NCURSES=y
+            BR2_PACKAGE_NCURSES_TARGET_PROGS=y
           script: |
             chmod +x usr/bin/hello-world
           profile: |
