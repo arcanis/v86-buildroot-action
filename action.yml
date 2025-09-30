@@ -19,6 +19,14 @@ inputs:
     description: 'Path to output the built image'
     required: false
     default: ''
+  profile:
+    description: 'Profile script to run when the shell boots'
+    required: false
+    default: ''
+  script:
+    description: 'Build script to run before assembling the image'
+    required: false
+    default: ''
 
 runs:
   using: docker
@@ -28,3 +36,5 @@ runs:
     - ${{inputs.config}}
     - ${{inputs.overlay}}
     - ${{inputs.output}}
+    - ${{inputs.profile}}
+    - ${{inputs.script}}

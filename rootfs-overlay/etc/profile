@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#udhcpc
+mount -a
+
+echo 0 > /proc/sys/kernel/printk
+
+PS1='\W% '
+HOME='/root'
+
+cat /etc/header
+cd ~

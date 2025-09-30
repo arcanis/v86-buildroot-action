@@ -15,16 +15,98 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set the generation time
-        run: |
-          mkdir -p rootfs-overlay/etc
-          echo "$(date)" > rootfs-overlay/etc/header
-
       - name: Build V86 Image
         uses: ./
         with:
-          overlay: rootfs-overlay
           output: basic-v86-image.bin
+          overlay: .github/workflows/example/overlay
+          config: |
+            BR2_PACKAGE_BASH=y
+            BR2_SYSTEM_BIN_SH_BASH=y
+
+            # For tput
+            BR2_PACKAGE_NCURSES=y
+            BR2_PACKAGE_NCURSES_TARGET_PROGS=y
+          script: |
+            chmod +x usr/bin/hello-world
+          profile: |
+            # Unicode symbols
+            PS_SYMBOL='$'
+
+            # Solarized colorscheme
+            BG_BASE00="\\[$(tput setab 11)\\]"
+            BG_BASE01="\\[$(tput setab 10)\\]"
+            BG_BASE02="\\[$(tput setab 0)\\]"
+            BG_BASE03="\\[$(tput setab 8)\\]"
+            BG_BASE0="\\[$(tput setab 12)\\]"
+            BG_BASE1="\\[$(tput setab 14)\\]"
+            BG_BASE2="\\[$(tput setab 7)\\]"
+            BG_BASE3="\\[$(tput setab 15)\\]"
+            BG_BLUE="\\[$(tput setab 4)\\]"
+            BG_COLOR1="\\[\\e[48;5;240m\\]"
+            BG_COLOR2="\\[\\e[48;5;238m\\]"
+            BG_COLOR3="\\[\\e[48;5;238m\\]"
+            BG_COLOR4="\\[\\e[48;5;31m\\]"
+            BG_COLOR5="\\[\\e[48;5;31m\\]"
+            BG_COLOR6="\\[\\e[48;5;237m\\]"
+            BG_COLOR7="\\[\\e[48;5;237m\\]"
+            BG_COLOR8="\\[\\e[48;5;161m\\]"
+            BG_COLOR9="\\[\\e[48;5;161m\\]"
+            BG_CYAN="\\[$(tput setab 6)\\]"
+            BG_GREEN="\\[$(tput setab 2)\\]"
+            BG_MAGENTA="\\[$(tput setab 5)\\]"
+            BG_ORANGE="\\[$(tput setab 9)\\]"
+            BG_RED="\\[$(tput setab 1)\\]"
+            BG_VIOLET="\\[$(tput setab 13)\\]"
+            BG_YELLOW="\\[$(tput setab 3)\\]"
+            BOLD="\\[$(tput bold)\\]"
+            DIM="\\[$(tput dim)\\]"
+            FG_BASE00="\\[$(tput setaf 11)\\]"
+            FG_BASE01="\\[$(tput setaf 10)\\]"
+            FG_BASE02="\\[$(tput setaf 0)\\]"
+            FG_BASE03="\\[$(tput setaf 8)\\]"
+            FG_BASE0="\\[$(tput setaf 12)\\]"
+            FG_BASE1="\\[$(tput setaf 14)\\]"
+            FG_BASE2="\\[$(tput setaf 7)\\]"
+            FG_BASE3="\\[$(tput setaf 15)\\]"
+            FG_BLUE="\\[$(tput setaf 4)\\]"
+            FG_COLOR1="\\[\\e[38;5;250m\\]"
+            FG_COLOR2="\\[\\e[38;5;240m\\]"
+            FG_COLOR3="\\[\\e[38;5;250m\\]"
+            FG_COLOR4="\\[\\e[38;5;238m\\]"
+            FG_COLOR5="\\[\\e[38;5;31m\\]"
+            FG_COLOR6="\\[\\e[38;5;31m\\]"
+            FG_COLOR7="\\[\\e[38;5;250m\\]"
+            FG_COLOR8="\\[\\e[38;5;237m\\]"
+            FG_COLOR9="\\[\\e[38;5;161m\\]"
+            FG_CYAN="\\[$(tput setaf 6)\\]"
+            FG_GREEN="\\[$(tput setaf 2)\\]"
+            FG_MAGENTA="\\[$(tput setaf 5)\\]"
+            FG_ORANGE="\\[$(tput setaf 9)\\]"
+            FG_RED="\\[$(tput setaf 1)\\]"
+            FG_VIOLET="\\[$(tput setaf 13)\\]"
+            FG_YELLOW="\\[$(tput setaf 3)\\]"
+            RESET="\\[$(tput sgr0)\\]"
+            REVERSE="\\[$(tput rev)\\]"
+
+            ps1() {
+              # Check the exit code of the previous command and display different
+              # colors in the prompt accordingly.
+              if [ "$?" -eq 0 ]; then
+                local BG_EXIT="$BG_GREEN"
+                local FG_EXIT="$FG_GREEN"
+              else
+                local BG_EXIT="$BG_RED"
+                local FG_EXIT="$FG_RED"
+              fi
+
+              PS1="\n"
+              PS1+="${FG_EXIT}${BG_EXIT} ${RESET}${FG_EXIT}${BG_COLOR5}"
+              PS1+="${FG_COLOR1}${BG_COLOR5} \\w "
+              PS1+="${RESET}${FG_COLOR5}${RESET} "
+            }
+
+            PROMPT_COMMAND=ps1
 
       - name: Save as artifact
         uses: actions/upload-artifact@v4
