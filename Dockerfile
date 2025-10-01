@@ -23,4 +23,4 @@ COPY entrypoint.sh entrypoint.sh
 COPY post-build.sh post-build.sh
 COPY rootfs-overlay rootfs-overlay
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/root/entrypoint.sh"]
