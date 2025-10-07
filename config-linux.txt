@@ -1148,7 +1148,10 @@ CONFIG_SCSI_VIRTIO=y
 # CONFIG_SCSI_DH is not set
 # end of SCSI device support
 
-# CONFIG_ATA is not set
+CONFIG_ATA=y
+CONFIG_ATA_BMDMA=y
+CONFIG_ATA_SFF=y
+CONFIG_PATA_PIIX=y
 # CONFIG_MD is not set
 # CONFIG_TARGET_CORE is not set
 # CONFIG_FUSION is not set
