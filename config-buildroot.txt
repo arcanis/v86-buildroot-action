@@ -2716,7 +2716,7 @@ BR2_PACKAGE_URANDOM_SCRIPTS=y
 # Shells
 #
 # BR2_PACKAGE_MKSH is not set
-# BR2_PACKAGE_ZSH is not set
+BR2_PACKAGE_ZSH=y
 
 #
 # Utilities
