@@ -1,2 +1,3 @@
+#!/bin/sh
 echo /sbin/mdev > /proc/sys/kernel/hotplug
-touch /dev/mdev.log
+mdev -s
