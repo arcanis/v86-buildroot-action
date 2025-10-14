@@ -55,6 +55,8 @@ jobs:
 
             FG_TEXT="\\[\\e[38;5;254m\\]"
 
+            RESET="\\[\\e[0m\\]"
+
             ps1() {
               # Check the exit code of the previous command and display different
               # colors in the prompt accordingly.
@@ -73,6 +75,8 @@ jobs:
             }
 
             PROMPT_COMMAND=ps1
+
+            cd ~/proj
 
       - name: Save as artifact
         uses: actions/upload-artifact@v4
