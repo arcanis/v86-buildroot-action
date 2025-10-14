@@ -1,8 +1,8 @@
 #!/bin/sh
 
 start() {
-    echo 0 > /proc/sys/kernel/printk
     mount -a
+    echo 0 > /proc/sys/kernel/printk
     udhcpc
 }
 
