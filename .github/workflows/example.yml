@@ -7,6 +7,15 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build-basic:
     name: Build Basic Image
@@ -70,3 +79,27 @@ jobs:
         with:
           name: basic-v86-image
           path: basic-v86-image.bin
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build-basic
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: basic-v86-image
+          path: ./pages
+
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./pages
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
