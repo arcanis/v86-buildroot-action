@@ -6,6 +6,7 @@ TARGET_FILESYSTEM="$1"
 
 cd $TARGET_FILESYSTEM
 
+mkdir -p media/cdrom
 chmod +x etc/init.d/S90v86
 
 if [[ -e "$BUILDROOT_TREE/post-build-user.sh" ]]; then
