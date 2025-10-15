@@ -1,0 +1,17 @@
+#!/bin/sh
+
+start() {
+    mount -a
+    echo 0 > /proc/sys/kernel/printk
+    udhcpc
+}
+
+case "$1" in
+    start)
+        "$1";;
+    stop|restart|reload)
+        exit 0;;
+    *)
+        echo "Usage: $0 {start|stop|restart|reload}"
+        exit 1
+esac
